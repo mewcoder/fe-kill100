@@ -3,8 +3,10 @@ import { onMounted, ref, reactive } from "vue";
 import api from "../../api";
 import { Add, AiResults } from "@vicons/carbon";
 import { useMessage } from "naive-ui";
+import { state } from "../store";
 
 const message = useMessage();
+const total = ref(0);
 
 let labelList = ref([]);
 const showModal = ref(false);
@@ -15,6 +17,7 @@ const newQu = reactive({
 });
 
 onMounted(async () => {
+  getTotal();
   const res = await api.getLabels();
   if (res.status === 200) {
     labelList.value = res.data.map((item) => {
@@ -26,15 +29,19 @@ onMounted(async () => {
   }
 });
 
-const getOneQu = async () => {
-  let res = await api.getAllQuestion();
-  let total = 0;
+const getTotal = async () => {
+  let res = await api.getAllQuestion({
+    per_page: 100,
+  });
   if (res.status === 200) {
-    total = res.data.length || 0;
+    state.total = res.data.length || 0;
   }
-  const id = Math.floor(Math.random() * total + 1);
-  console.log(id);
-  res = await api.getOneQuestion(id);
+};
+
+const getOneQu = async () => {
+  const id = Math.floor(Math.random() * state.total + 1);
+
+  const res = await api.getOneQuestion(id);
   if (res.status === 200) {
     newQu.input = res.data.title;
     newQu.label = res.data.labels[0].name;
@@ -60,6 +67,7 @@ const saveOneQu = async () => {
   } else {
     message.error("添加失败");
   }
+  getTotal();
 };
 </script>
 
@@ -82,7 +90,6 @@ const saveOneQu = async () => {
     @positive-click="saveOneQu"
     style="width: 600px"
   >
- 
     <n-input
       v-model:value="newQu.input"
       type="textarea"

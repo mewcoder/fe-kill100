@@ -2,8 +2,8 @@
 import { onMounted, ref, watch } from "vue";
 import api from "../../api";
 import { Account, ArrowsVertical } from "@vicons/carbon";
+import { state } from "../store";
 
-const total = ref(0);
 const list = ref([]);
 const showTable = ref(false);
 const label = ref("");
@@ -15,20 +15,23 @@ watch(
   async () => {
     const res = await api.getAllQuestion({
       labels: label.value,
+      per_page: 100,
     });
     if (res.status === 200) {
       list.value = res.data;
-      total.value = res.data.length || 0;
+      state.total = res.data.length || 0;
     }
   }
 );
 
 onMounted(async () => {
   showSpin.value = true;
-  let res = await api.getAllQuestion();
+  let res = await api.getAllQuestion({
+    per_page: 100,
+  });
   if (res.status === 200) {
     list.value = res.data;
-    total.value = res.data.length || 0;
+    state.total = res.data.length || 0;
   }
   showSpin.value = false;
   res = await api.getLabels();
@@ -53,7 +56,7 @@ const switchTable = () => {
 <template>
   <div class="table">
     <n-spin :show="showSpin">
-      <n-statistic :value="total">
+      <n-statistic :value="state.total">
         <template #prefix>
           <n-icon>
             <Account />
@@ -80,7 +83,7 @@ const switchTable = () => {
         <tr>
           <th>题目</th>
           <th>分类</th>
-          <th>序号</th>
+          <!-- <th>序号</th> -->
           <th>链接</th>
         </tr>
       </thead>
@@ -90,7 +93,7 @@ const switchTable = () => {
           <td>
             <n-tag>{{ item.labels[0].name }}</n-tag>
           </td>
-          <td>{{ item.number }}</td>
+          <!-- <td>{{ item.number }}</td> -->
           <td><a :href="item.html_url" target="_blank">查看</a></td>
         </tr>
       </tbody>

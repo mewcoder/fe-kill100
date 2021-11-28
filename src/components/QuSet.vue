@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { Settings } from "@vicons/carbon";
+import { state } from "../store";
 
 const showModal = ref(false);
 const input = ref("");
