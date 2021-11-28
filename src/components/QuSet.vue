@@ -9,6 +9,7 @@ const save = async () => {
   if (input.value.trim() !== "") {
     localStorage.setItem("token", btoa(input.value));
   }
+  input.value = "";
 };
 </script>
 
@@ -29,6 +30,7 @@ const save = async () => {
     @positive-click="save"
     style="width: 600px"
   >
+    提交题目需要 github 的 token
     <n-input v-model:value="input" type="text" placeholder="请输入" />
   </n-modal>
 </template>

@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref, reactive } from "vue";
 import api from "../../api";
-import { Add, Edit } from "@vicons/carbon";
+import { Add, AiResults } from "@vicons/carbon";
 import { useMessage } from "naive-ui";
 
 const message = useMessage();
@@ -13,8 +13,6 @@ const newQu = reactive({
   input: "",
   label: "",
 });
-
-const ramdomId = ref(0);
 
 onMounted(async () => {
   const res = await api.getLabels();
@@ -57,7 +55,7 @@ const saveOneQu = async () => {
     labels: [newQu.label],
   };
   const res = await api.addOneQuestion(data);
-  if (res.status === 201) {
+  if (res.status && res.status === 201) {
     message.success("添加成功");
   } else {
     message.error("添加失败");
@@ -68,7 +66,7 @@ const saveOneQu = async () => {
 <template>
   <n-space justify="center">
     <n-button type="info" @click="getOneQu" size="large">
-      <n-icon> <Edit /> </n-icon>来一题</n-button
+      <n-icon> <AiResults /> </n-icon>来一题</n-button
     >
     <n-button @click="addOneQu" size="large">
       <n-icon> <Add /> </n-icon>加一题</n-button
@@ -84,6 +82,7 @@ const saveOneQu = async () => {
     @positive-click="saveOneQu"
     style="width: 600px"
   >
+ 
     <n-input
       v-model:value="newQu.input"
       type="textarea"
@@ -100,15 +99,15 @@ const saveOneQu = async () => {
   <n-modal
     class="custom-card"
     v-model:show="showModal2"
-    preset="card"
+    preset="dialog"
     title="来一题"
-    :bordered="false"
-    :segmented="segmented"
-    style="width: 600px"
+    style="width: 600px; height: 200px"
   >
-    <n-tag size="medium" type="info" style="margin-right: 5px">
-      {{ newQu.label }} </n-tag
-    >{{ newQu.input }}
+    <div style="margin-top: 50px; font-size: 16px">
+      <n-tag size="medium" type="info" style="margin-right: 5px">
+        {{ newQu.label }} </n-tag
+      >{{ newQu.input }}
+    </div>
   </n-modal>
 </template>
 

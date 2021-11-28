@@ -6,7 +6,7 @@ import QuSet from "./components/QuSet.vue";
 
 <template>
   <n-message-provider
-    ><h1 class="title">来道前端题</h1>
+    ><h1 class="title">⚔️ 来道前端题</h1>
     <QuBar /> <QuStat /> <QuSet />
   </n-message-provider>
 </template>

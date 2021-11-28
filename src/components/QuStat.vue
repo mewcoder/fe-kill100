@@ -8,6 +8,7 @@ const list = ref([]);
 const showTable = ref(false);
 const label = ref("");
 const labelList = ref([]);
+const showSpin = ref(false);
 
 watch(
   () => label.value,
@@ -15,7 +16,6 @@ watch(
     const res = await api.getAllQuestion({
       labels: label.value,
     });
-
     if (res.status === 200) {
       list.value = res.data;
       total.value = res.data.length || 0;
@@ -24,12 +24,13 @@ watch(
 );
 
 onMounted(async () => {
+  showSpin.value = true;
   let res = await api.getAllQuestion();
   if (res.status === 200) {
     list.value = res.data;
     total.value = res.data.length || 0;
   }
-
+  showSpin.value = false;
   res = await api.getLabels();
   if (res.status === 200) {
     labelList.value = res.data.map((item) => {
@@ -51,15 +52,17 @@ const switchTable = () => {
 
 <template>
   <div class="table">
-    <n-statistic :value="total">
-      <template #prefix>
-        <n-icon>
-          <Account />
-        </n-icon>
-        共
-      </template>
-      <template #suffix>题</template>
-    </n-statistic>
+    <n-spin :show="showSpin">
+      <n-statistic :value="total">
+        <template #prefix>
+          <n-icon>
+            <Account />
+          </n-icon>
+          共
+        </template>
+        <template #suffix>题</template>
+      </n-statistic></n-spin
+    >
     <n-select
       v-show="showTable"
       v-model:value="label"

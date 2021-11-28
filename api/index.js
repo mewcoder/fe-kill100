@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import { useMessage } from 'naive-ui'
 const repo = 'https://api.github.com/repos/mewcoder/FE-Qu'
 
 // const token = localStorage.getItem('token')
@@ -10,12 +10,14 @@ axios.interceptors.request.use(function (config) {
   let token = window.localStorage.getItem("token")
   if (token) {
     config.headers['authorization'] = `Bearer ${atob(token)}`;
-    return config;
+  } else if (!token && config.method == 'post') {
+    config.headers['authorization'] = `Bearer xxxxxxxxx`;
   }
+  return config;
 }, function (error) {
-
   return Promise.reject(error);
 });
+
 
 
 export default {
