@@ -39,8 +39,8 @@ const getTotal = async () => {
 };
 
 const getOneQu = async () => {
-  const id = Math.floor(Math.random() * state.total + 1);
-
+  // 0 ~ total-1
+  const id = Math.floor(Math.random() * state.total) + 1;
   const res = await api.getOneQuestion(id);
   if (res.status === 200) {
     newQu.input = res.data.title;
